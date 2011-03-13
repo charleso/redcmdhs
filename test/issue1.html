@@ -1,0 +1,562 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>EllipseJavaInfrastructure - Bug #1718: JVM Custom Property Clean up</title>
+<meta name="description" content="Redmine" />
+<meta name="keywords" content="issue,bug,tracker" />
+<script src="/redmine/javascripts/prototype.js?1251746896" type="text/javascript"></script>
+<script src="/redmine/javascripts/effects.js?1254993814" type="text/javascript"></script>
+<script src="/redmine/javascripts/dragdrop.js?1254993814" type="text/javascript"></script>
+<script src="/redmine/javascripts/controls.js?1254993814" type="text/javascript"></script>
+
+<script src="/redmine/javascripts/application.js?1267352889" type="text/javascript"></script>
+<link href="/redmine/stylesheets/jstoolbar.css?1267352889" media="screen" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(/redmine/stylesheets/csshover.htc?1267352889);}
+    </style>
+<![endif]-->
+
+<!-- page specific tags -->
+<script src="/redmine/javascripts/calendar/calendar.js?1267352889" type="text/javascript"></script><script src="/redmine/javascripts/calendar/lang/calendar-en.js?1267352889" type="text/javascript"></script><script type="text/javascript">
+//<![CDATA[
+
+//]]>
+</script><script src="/redmine/javascripts/calendar/calendar-setup.js?1267352889" type="text/javascript"></script><link href="/redmine/stylesheets/calendar.css?1267352889" media="screen" rel="stylesheet" type="text/css" />
+    <link href="/redmine/stylesheets/scm.css?1267352889" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div id="wrapper">
+<div id="top-menu">
+    <div id="account">
+        <ul><li><a href="/redmine/my/account" class="my-account">My account</a></li>
+<li><a href="/redmine/logout" class="logout">Sign out</a></li></ul>    </div>
+    <div id="loggedas">Logged in as <a href="/redmine/users/25">co4222</a></div>
+    <ul><li><a href="/redmine/" class="home">Home</a></li>
+
+<li><a href="/redmine/my/page" class="my-page">My page</a></li>
+<li><a href="/redmine/projects" class="projects">Projects</a></li>
+<li><a href="http://www.redmine.org/guide" class="help">Help</a></li></ul></div>
+      
+<div id="header">
+    <div id="quick-search">
+        <form action="/redmine/search/index/elljavinf" method="get">
+        <input name="issues" type="hidden" value="1" />
+        <a href="/redmine/search/index/elljavinf" accesskey="4">Search</a>:
+        <input accesskey="f" class="small" id="q" name="q" size="20" type="text" />
+
+        </form>
+        <select onchange="if (this.value != '') { window.location = this.value; }"><option value=''>Jump to a project...</option><option value="" disabled="disabled">---</option><option value="/redmine/projects/arch1?jump=issues">Arch Coal COBOL Conversion</option><option value="/redmine/projects/cclas?jump=issues">CCLAS</option><option value="/redmine/projects/cclas-g6?jump=issues">&nbsp;&nbsp;&#187; CCLAS G6</option><option value="/redmine/projects/cclas-webchannel?jump=issues">&nbsp;&nbsp;&#187; CCLAS Web Channel</option><option value="/redmine/projects/e8envsupp?jump=issues">Ellipse8 Environment Support</option><option selected="selected" value="/redmine/projects/elljavinf?jump=issues">EllipseJavaInfrastructure</option><option value="/redmine/projects/ellipsej?jump=issues">&nbsp;&nbsp;&#187; EllipseJ Conversion</option><option value="/redmine/projects/ewsenhancements?jump=issues">&nbsp;&nbsp;&#187; EWS Enhancements</option><option value="/redmine/projects/ji-10ff?jump=issues">&nbsp;&nbsp;&#187; Iteration 2 - 10FF</option><option value="/redmine/projects/workflow?jump=issues">&nbsp;&nbsp;&#187; WorkFlow</option></select>
+
+    </div>
+    
+    <h1>EllipseJavaInfrastructure</h1>
+    
+    <div id="main-menu">
+        <ul><li><a href="/redmine/projects/elljavinf" class="overview">Overview</a></li>
+<li><a href="/redmine/projects/elljavinf/activity" class="activity">Activity</a></li>
+<li><a href="/redmine/projects/elljavinf/roadmap" class="roadmap">Roadmap</a></li>
+<li><a href="/redmine/projects/elljavinf/issues" class="issues selected">Issues</a></li>
+<li><a href="/redmine/projects/elljavinf/issues/new" accesskey="7" class="new-issue">New issue</a></li>
+
+<li><a href="/redmine/projects/elljavinf/news" class="news">News</a></li>
+<li><a href="/redmine/projects/elljavinf/documents" class="documents">Documents</a></li>
+<li><a href="/redmine/projects/elljavinf/wiki" class="wiki">Wiki</a></li>
+<li><a href="/redmine/projects/elljavinf/files" class="files">Files</a></li>
+<li><a href="/redmine/projects/elljavinf/repository" class="repository">Repository</a></li>
+<li><a href="/redmine/projects/elljavinf/settings" class="settings">Settings</a></li></ul>
+    </div>
+</div>
+
+<div class="" id="main">
+
+    <div id="sidebar">        
+        
+    <h3>Issues</h3>
+<a href="/redmine/projects/elljavinf/issues?set_filter=1">View all issues</a><br />
+
+<a href="/redmine/projects/elljavinf/issues/report">Summary</a><br />
+
+
+
+
+	<a href="/redmine/projects/elljavinf/issues/calendar">Calendar</a><br />
+
+	<a href="/redmine/projects/elljavinf/issues/gantt">Gantt</a><br />
+
+
+
+<h3>Custom queries</h3>
+
+<a href="/redmine/projects/elljavinf/issues?query_id=37">DataNavigator:</a><br />
+<a href="/redmine/projects/elljavinf/issues?query_id=36">Ellipse 8 Batch:</a><br />
+<a href="/redmine/projects/elljavinf/issues?query_id=38">L1:</a><br />
+<a href="/redmine/projects/elljavinf/issues?query_id=55">Open JI Bugs - No Sub Projects</a><br />
+
+<a href="/redmine/projects/elljavinf/issues?query_id=11">Target Version</a><br />
+<a href="/redmine/projects/elljavinf/issues?query_id=39">UI:</a><br />
+
+
+
+        
+    </div>
+    
+    <div id="content">
+				
+        <div class="contextual">
+<a href="/redmine/issues/1718/edit" accesskey="e" class="icon icon-edit" onclick="showAndScrollTo(&quot;update&quot;, &quot;notes&quot;); return false;">Update</a>
+<a href="/redmine/issues/1718/time_entries/new" class="icon icon-time-add">Log time</a>
+
+<span id="watcher"><a class="icon icon-fav-off" href="/redmine/watchers/watch?object_id=1718&amp;object_type=issue&amp;replace%5B%5D=watcher&amp;replace%5B%5D=watcher2" onclick="new Ajax.Request('/redmine/watchers/watch?object_id=1718&amp;object_type=issue&amp;replace%5B%5D=watcher&amp;replace%5B%5D=watcher2', {asynchronous:true, evalScripts:true, parameters:'authenticity_token=' + encodeURIComponent('477a6fcea32d11d228302e1a22a835eff2c6e120')}); return false;">Watch</a></span>
+<a href="/redmine/projects/elljavinf/issues/1718/copy" class="icon icon-duplicate">Duplicate</a>
+<a href="/redmine/issues/1718/move?copy_options%5Bcopy%5D=t" class="icon icon-copy">Copy</a>
+<a href="/redmine/issues/1718/move" class="icon icon-move">Move</a>
+<a href="/redmine/issues/1718/destroy" class="icon icon-del" onclick="if (confirm('Are you sure ?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var s = document.createElement('input'); s.setAttribute('type', 'hidden'); s.setAttribute('name', 'authenticity_token'); s.setAttribute('value', '477a6fcea32d11d228302e1a22a835eff2c6e120'); f.appendChild(s);f.submit(); };return false;">Delete</a>
+</div>
+
+
+<h2>Bug #1718</h2>
+
+<div class="issue status-1 priority-2 details">
+        
+        <h3>JVM Custom Property Clean up - EDOI</h3>
+        <p class="author">
+        Added by <a href="/redmine/users/20">Matt OConnor</a> <a href="/redmine/projects/elljavinf/activity?from=2011-02-16" title="02/16/2011 01:47 am">25 days</a> ago.
+        
+        Updated <a href="/redmine/projects/elljavinf/activity?from=2011-02-17" title="02/17/2011 12:01 am">24 days</a> ago.
+        
+        </p>
+
+<table class="attributes">
+<tr>
+    <th class="status">Status:</th><td class="status">New</td>
+    <th class="start-date">Start:</th><td class="start-date">02/16/2011</td>
+</tr>
+<tr>
+    <th class="priority">Priority:</th><td class="priority">Normal</td>
+
+    <th class="due-date">Due date:</th><td class="due-date"></td>
+</tr>
+<tr>
+    <th class="assigned-to">Assigned to:</th><td class="assigned-to"><a href="/redmine/users/28">Rob Barrett</a></td>
+    <th class="progress">% Done:</th><td class="progress"><table class="progress" style="width: 80px;"><tr><td class="todo" style="width: 100%;"></td></tr></table><p class="pourcent">0%</p></td>
+</tr>
+<tr>
+    <th class="category">Category:</th><td class="category">-</td>
+
+    
+    <th class="spent-time">Spent time:</th>
+    <td class="spent-time">-</td>
+    
+</tr>
+<tr>
+    <th class="fixed-version">Target version:</th><td class="fixed-version">-</td>
+    
+</tr>
+<tr>
+	<th>MEGS Workorder:</th><td></td>
+
+	<th>Software Module:</th><td></td>
+</tr>
+
+
+</table>
+<hr />
+
+<div class="contextual">
+<a class="icon icon-comment" href="#" onclick="new Ajax.Request('/redmine/issues/1718/quoted', {asynchronous:true, evalScripts:true, parameters:'authenticity_token=' + encodeURIComponent('477a6fcea32d11d228302e1a22a835eff2c6e120')}); return false;">Quote</a>
+</div>
+                              
+<p><strong>Description</strong></p>
+<div class="wiki">
+
+<p>Part of the JVM Custom Property clean up</p>
+
+
+	<p>edoi.appserver.name - remove and instead derive</p>
+
+
+	<p>edoi.database.product.type - remove and instead derive</p>
+
+
+	<p>edoi.duplicate.key.error.code - remove entirely</p>
+
+
+	<p>edoi.load.used.modules.only.enabled - remove entirely</p>
+</div>
+
+
+
+
+
+
+<hr />
+<div id="relations">
+<div class="contextual">
+
+    <a href="#" onclick="Element.toggle('new-relation-form'); this.blur(); return false;">Add</a>
+
+</div>
+
+<p><strong>Related issues</strong></p>
+
+
+
+<form action="/redmine/issues/1718/relations/1718" id="new-relation-form" method="post" onsubmit="new Ajax.Request('/redmine/issues/1718/relations/1718', {asynchronous:true, evalScripts:true, method:'post', parameters:Form.serialize(this)}); return false;" style="display: none;"><div style="margin:0;padding:0"><input name="authenticity_token" type="hidden" value="477a6fcea32d11d228302e1a22a835eff2c6e120" /></div>
+
+
+<p><select id="relation_relation_type" name="relation[relation_type]" onchange="setPredecessorFieldsVisibility();"><option value="relates">related to</option>
+<option value="duplicates">duplicates</option>
+<option value="blocks">blocks</option>
+
+<option value="precedes">precedes</option>
+<option value="follows">follows</option></select>
+Issue #<input id="relation_issue_to_id" name="relation[issue_to_id]" size="6" type="text" />
+<span id="predecessor_fields" style="display:none;">
+Delay: <input id="relation_delay" name="relation[delay]" size="3" type="text" /> days
+</span>
+<input name="commit" type="submit" value="Add" />
+<a href="#" onclick="Element.toggle('new-relation-form'); this.blur(); return false;">Cancel</a>
+</p>
+
+<script type="text/javascript">
+//<![CDATA[
+setPredecessorFieldsVisibility();
+//]]>
+
+</script>
+
+</form>
+
+</div>
+
+
+
+<hr />
+<div id="watchers">
+<div class="contextual">
+<a href="#" onclick="new Ajax.Request('/redmine/watchers/new?object_id=1718&amp;object_type=issue', {asynchronous:true, evalScripts:true, parameters:'authenticity_token=' + encodeURIComponent('477a6fcea32d11d228302e1a22a835eff2c6e120')}); return false;">Add</a>
+</div>
+
+<p><strong>Watchers</strong></p>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div id="history">
+<h3>History</h3>
+
+  <div id="change-4018" class="journal">
+
+    <h4><div style="float:right;"><a href="/redmine/issues/1718#note-1">#1</a></div>
+    
+    <a name="note-1"></a>
+		Updated by <a href="/redmine/users/20">Matt OConnor</a> <a href="/redmine/projects/elljavinf/activity?from=2011-02-16" title="02/16/2011 01:48 am">25 days</a> ago</h4>
+    
+    <ul>
+    
+    </ul>
+
+    <div class="wiki editable" id="journal-4018-notes"><div class="contextual"><a href="#" onclick="new Ajax.Request('/redmine/issues/1718/quoted?journal_id=4018', {asynchronous:true, evalScripts:true, parameters:'authenticity_token=' + encodeURIComponent('477a6fcea32d11d228302e1a22a835eff2c6e120')}); return false;" title="Quote"><img alt="Comment" src="/redmine/images/comment.png?1267352888" /></a> <a href="#" onclick="new Ajax.Request('/redmine/journals/edit/4018', {asynchronous:true, evalScripts:true, method:'get'}); return false;" title="Edit"><img alt="Edit" src="/redmine/images/edit.png?1267352888" /></a></div><p>When finished assign back to Matt O to remove from ControlTier</p></div>
+  </div>
+  
+
+  <div id="change-4019" class="journal">
+    <h4><div style="float:right;"><a href="/redmine/issues/1718#note-2">#2</a></div>
+    
+    <a name="note-2"></a>
+		Updated by <a href="/redmine/users/26">Isaac Gale</a> <a href="/redmine/projects/elljavinf/activity?from=2011-02-16" title="02/16/2011 01:58 am">25 days</a> ago</h4>
+
+    
+    <ul>
+    
+    </ul>
+    <div class="wiki editable" id="journal-4019-notes"><div class="contextual"><a href="#" onclick="new Ajax.Request('/redmine/issues/1718/quoted?journal_id=4019', {asynchronous:true, evalScripts:true, parameters:'authenticity_token=' + encodeURIComponent('477a6fcea32d11d228302e1a22a835eff2c6e120')}); return false;" title="Quote"><img alt="Comment" src="/redmine/images/comment.png?1267352888" /></a> <a href="#" onclick="new Ajax.Request('/redmine/journals/edit/4019', {asynchronous:true, evalScripts:true, method:'get'}); return false;" title="Edit"><img alt="Edit" src="/redmine/images/edit.png?1267352888" /></a></div><p>None of these are needed for PD190.</p></div>
+  </div>
+  
+
+  <div id="change-4080" class="journal">
+    <h4><div style="float:right;"><a href="/redmine/issues/1718#note-3">#3</a></div>
+    
+    <a name="note-3"></a>
+
+		Updated by <a href="/redmine/users/20">Matt OConnor</a> <a href="/redmine/projects/elljavinf/activity?from=2011-02-17" title="02/17/2011 12:01 am">24 days</a> ago</h4>
+    
+    <ul>
+    
+       <li><strong>Assigned to</strong> changed from <i>Isaac Gale</i> to <i>Rob Barrett</i></li>
+
+    
+    </ul>
+    
+  </div>
+  
+
+
+</div>
+
+
+<div class="contextual">
+<a href="/redmine/issues/1718/edit" accesskey="e" class="icon icon-edit" onclick="showAndScrollTo(&quot;update&quot;, &quot;notes&quot;); return false;">Update</a>
+<a href="/redmine/issues/1718/time_entries/new" class="icon icon-time-add">Log time</a>
+
+<span id="watcher2"><a class="icon icon-fav-off" href="/redmine/watchers/watch?object_id=1718&amp;object_type=issue&amp;replace%5B%5D=watcher&amp;replace%5B%5D=watcher2" onclick="new Ajax.Request('/redmine/watchers/watch?object_id=1718&amp;object_type=issue&amp;replace%5B%5D=watcher&amp;replace%5B%5D=watcher2', {asynchronous:true, evalScripts:true, parameters:'authenticity_token=' + encodeURIComponent('477a6fcea32d11d228302e1a22a835eff2c6e120')}); return false;">Watch</a></span>
+<a href="/redmine/projects/elljavinf/issues/1718/copy" class="icon icon-duplicate">Duplicate</a>
+
+<a href="/redmine/issues/1718/move?copy_options%5Bcopy%5D=t" class="icon icon-copy">Copy</a>
+<a href="/redmine/issues/1718/move" class="icon icon-move">Move</a>
+<a href="/redmine/issues/1718/destroy" class="icon icon-del" onclick="if (confirm('Are you sure ?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var s = document.createElement('input'); s.setAttribute('type', 'hidden'); s.setAttribute('name', 'authenticity_token'); s.setAttribute('value', '477a6fcea32d11d228302e1a22a835eff2c6e120'); f.appendChild(s);f.submit(); };return false;">Delete</a>
+</div>
+
+
+<div style="clear: both;"></div>
+
+
+  <div id="update" style="display:none;">
+  <h3>Update</h3>
+
+  <form action="/redmine/issues/1718/edit" enctype="multipart/form-data" id="issue-form" method="post"><div style="margin:0;padding:0"><input name="authenticity_token" type="hidden" value="477a6fcea32d11d228302e1a22a835eff2c6e120" /></div>
+    
+    
+    <div class="box">
+    
+        <fieldset class="tabular"><legend>Change properties
+        
+        <small>(<a href="/redmine/issues/1718" onclick="Effect.toggle(&quot;issue_descr_fields&quot;, &quot;appear&quot;, {duration:0.3}); return false;">More</a>)</small>
+        
+        </legend>
+        <div id="issue_descr_fields" style="display:none">
+<p><label for="issue_tracker_id">Tracker<span class="required"> *</span></label><select id="issue_tracker_id" name="issue[tracker_id]"><option value="1" selected="selected">Bug</option>
+
+<option value="5">Enhancement</option>
+<option value="2">Feature</option>
+<option value="3">Support</option>
+<option value="4">Task</option></select></p>
+<script type="text/javascript">
+//<![CDATA[
+new Form.Element.EventObserver('issue_tracker_id', function(element, value) {new Ajax.Updater('attributes', '/redmine/issues/update_form/1718?project_id=elljavinf', {asynchronous:true, evalScripts:true, parameters:Form.serialize('issue-form') + '&authenticity_token=' + encodeURIComponent('477a6fcea32d11d228302e1a22a835eff2c6e120')})})
+//]]>
+</script>
+
+<p><label for="issue_subject">Subject<span class="required"> *</span></label><input id="issue_subject" name="issue[subject]" size="80" type="text" value="JVM Custom Property Clean up - EDOI" /></p>
+<p><label for="issue_description">Description</label><textarea accesskey="e" class="wiki-edit" cols="60" id="issue_description" name="issue[description]" rows="10">Part of the JVM Custom Property clean up
+
+edoi.appserver.name - remove and instead derive 
+
+edoi.database.product.type - remove and instead derive
+
+edoi.duplicate.key.error.code - remove entirely
+
+edoi.load.used.modules.only.enabled - remove entirely</textarea></p>
+
+</div>
+
+<div id="attributes" class="attributes">
+	
+
+<div class="splitcontentleft">
+
+<p><label for="issue_status_id">Status<span class="required"> *</span></label><select id="issue_status_id" name="issue[status_id]"><option value="1" selected="selected">New</option>
+<option value="2">In Progress</option>
+<option value="3">Resolved</option>
+<option value="4">Feedback</option>
+
+<option value="5">Closed</option>
+<option value="6">Rejected</option></select></p>
+
+
+<p><label for="issue_priority_id">Priority<span class="required"> *</span></label><select id="issue_priority_id" name="issue[priority_id]"><option value="3">Low</option>
+<option value="4" selected="selected">Normal</option>
+<option value="5">High</option>
+<option value="6">Urgent</option>
+
+<option value="7">Immediate</option></select></p>
+<p><label for="issue_assigned_to_id">Assigned to</label><select id="issue_assigned_to_id" name="issue[assigned_to_id]"><option value=""></option>
+
+<option value="28" selected="selected">Some Body</option>
+<option value="112">Foo Bar</option>
+
+<p><label for="issue_fixed_version_id">Target version</label><select id="issue_fixed_version_id" name="issue[fixed_version_id]"><option value=""></option>
+<option value="18">3.0.0.0</option>
+<option value="35">1.0.0.0</option>
+<option value="19">2</option>
+<option value="10">2.12.0.0</option>
+<option value="9">2.13.0.0</option>
+<option value="13">2.14.0.0</option>
+<option value="14">2.15.0.0</option>
+
+<option value="21">2.16.0.0</option>
+<option value="24">2.17.0.0</option>
+<option value="31">2.17.0.2</option>
+<option value="29">2.18.0.0</option>
+<option value="33">2.18.0.1</option>
+<option value="32">2.19.0.0</option>
+<option value="41">2.19.0.1</option>
+<option value="37">2.20</option>
+<option value="38">2.20.0.0</option>
+
+<option value="43">2.20.0.1</option>
+<option value="39">2.21.0.0</option>
+<option value="42">2.22.0.0</option>
+<option value="45">2.23.0.0</option>
+<option value="46">2.24.0.0</option>
+<option value="3">V1</option></select>
+<a href="/redmine/issues/1718" onclick="promptToRemote('New version', 'version[name]', '/redmine/projects/elljavinf/versions/new'); return false;" tabindex="200" title="New version"><img alt="Add" src="/redmine/images/add.png?1267352888" style="vertical-align: middle;" /></a>
+</p>
+
+</div>
+
+<div class="splitcontentright">
+<p><label for="issue_start_date">Start</label><input id="issue_start_date" name="issue[start_date]" size="10" type="text" value="2011-02-16" /><img alt="Calendar" class="calendar-trigger" id="issue_start_date_trigger" src="/redmine/images/calendar.png?1267352888" /><script type="text/javascript">
+//<![CDATA[
+Calendar.setup({inputField : 'issue_start_date', ifFormat : '%Y-%m-%d', button : 'issue_start_date_trigger' });
+//]]>
+</script></p>
+<p><label for="issue_due_date">Due date</label><input id="issue_due_date" name="issue[due_date]" size="10" type="text" /><img alt="Calendar" class="calendar-trigger" id="issue_due_date_trigger" src="/redmine/images/calendar.png?1267352888" /><script type="text/javascript">
+//<![CDATA[
+Calendar.setup({inputField : 'issue_due_date', ifFormat : '%Y-%m-%d', button : 'issue_due_date_trigger' });
+//]]>
+</script></p>
+<p><label for="issue_estimated_hours">Estimated time</label><input id="issue_estimated_hours" name="issue[estimated_hours]" size="3" type="text" /> Hours</p>
+
+<p><label for="issue_done_ratio">% Done</label><select id="issue_done_ratio" name="issue[done_ratio]"><option value="0" selected="selected">0 %</option>
+<option value="10">10 %</option>
+
+<option value="20">20 %</option>
+<option value="30">30 %</option>
+<option value="40">40 %</option>
+<option value="50">50 %</option>
+<option value="60">60 %</option>
+<option value="70">70 %</option>
+<option value="80">80 %</option>
+<option value="90">90 %</option>
+<option value="100">100 %</option></select></p>
+
+</div>
+
+<div style="clear:both;"> </div>
+<div class="splitcontentleft">
+
+
+
+	<p><label for="issue_custom_field_values_1">MEGS Workorder</label><input id="issue_custom_field_values_1" name="issue[custom_field_values][1]" type="text" value="" /></p>
+</div><div class="splitcontentright">
+
+	<p><label for="issue_custom_field_values_2">Software Module</label><input id="issue_custom_field_values_2" name="issue[custom_field_values][2]" type="text" value="" /></p>
+
+</div>
+<div style="clear:both;"> </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<script src="/redmine/javascripts/jstoolbar/jstoolbar.js?1267352888" type="text/javascript"></script><script src="/redmine/javascripts/jstoolbar/textile.js?1267352888" type="text/javascript"></script><script src="/redmine/javascripts/jstoolbar/lang/jstoolbar-en.js?1267352888" type="text/javascript"></script><script type="text/javascript">
+//<![CDATA[
+var wikiToolbar = new jsToolBar($('issue_description')); wikiToolbar.setHelpLink('Text formatting: <a href="/redmine/help/wiki_syntax.html" onclick="window.open(&quot;/redmine/help/wiki_syntax.html&quot;, &quot;&quot;, &quot;resizable=yes, location=no, width=300, height=640, menubar=no, status=no, scrollbars=yes&quot;); return false;">Help</a>'); wikiToolbar.draw();
+//]]>
+
+</script>
+
+        </fieldset>
+    
+    
+        <fieldset class="tabular"><legend>Log time</legend>
+        
+        <div class="splitcontentleft">
+        <p><label for="time_entry_hours">Spent time</label><input id="time_entry_hours" label="label_spent_time" name="time_entry[hours]" size="6" type="text" /> Hours</p>
+        </div>
+        <div class="splitcontentright">
+
+        <p><label for="time_entry_activity_id">Activity</label><select id="time_entry_activity_id" name="time_entry[activity_id]"><option value="">--- Please select ---</option>
+<option value="8">Design</option>
+<option value="9">Development</option>
+<option value="13">Documentation</option>
+<option value="14">Testing</option>
+<option value="15">Deployment</option>
+<option value="16">Support</option></select></p>
+        </div>
+
+        <p><label for="time_entry_comments">Comment</label><input id="time_entry_comments" name="time_entry[comments]" size="60" type="text" /></p>
+        
+        
+    </fieldset>
+    
+    
+    <fieldset><legend>Notes</legend>
+    <textarea class="wiki-edit" cols="60" id="notes" name="notes" rows="10"></textarea>
+    <script src="/redmine/javascripts/jstoolbar/jstoolbar.js?1267352888" type="text/javascript"></script><script src="/redmine/javascripts/jstoolbar/textile.js?1267352888" type="text/javascript"></script><script src="/redmine/javascripts/jstoolbar/lang/jstoolbar-en.js?1267352888" type="text/javascript"></script><script type="text/javascript">
+//<![CDATA[
+var wikiToolbar = new jsToolBar($('notes')); wikiToolbar.setHelpLink('Text formatting: <a href="/redmine/help/wiki_syntax.html" onclick="window.open(&quot;/redmine/help/wiki_syntax.html&quot;, &quot;&quot;, &quot;resizable=yes, location=no, width=300, height=640, menubar=no, status=no, scrollbars=yes&quot;); return false;">Help</a>'); wikiToolbar.draw();
+//]]>
+</script>
+
+    
+    
+    <p>Files<br /><span id="attachments_fields">
+<input name="attachments[1][file]" size="30" type="file" /><input name="attachments[1][description]" size="60" type="text" value="" />
+<em>Optional description</em>
+</span>
+<br />
+<small><a href="#" onclick="addFileField(); return false;">Add another file</a>
+(Maximum size: 5120 )
+</small>
+</p>
+    </fieldset>
+    </div>
+
+    
+    <input id="issue_lock_version" name="issue[lock_version]" type="hidden" value="3" />
+    <input name="commit" type="submit" value="Submit" />
+    <a accesskey="r" href="#" onclick="new Ajax.Updater('preview', '/redmine/issues/preview/1718?project_id=elljavinf', {asynchronous:true, evalScripts:true, method:'post', onComplete:function(request){Element.scrollTo('preview')}, parameters:Form.serialize(&quot;issue-form&quot;) + '&amp;authenticity_token=' + encodeURIComponent('477a6fcea32d11d228302e1a22a835eff2c6e120')}); return false;">Preview</a>
+</form>
+
+<div id="preview" class="wiki"></div>
+
+  </div>
+
+
+<p class="other-formats">Also available in:
+	<span><a href="/redmine/issues/1718.atom?key=2cffc02ac3a08c21ea67b9c3829efddaefd78131" class="atom" rel="nofollow">Atom</a></span>
+
+	<span><a href="/redmine/issues/1718.pdf" class="pdf" rel="nofollow">PDF</a></span>
+</p>
+
+
+
+
+
+
+
+        
+				<div style="clear:both;"></div>
+    </div>
+</div>
+
+<div id="ajax-indicator" style="display:none;"><span>Loading...</span></div>
+	
+<div id="footer">
+    <!--Powered by <a href="http://www.redmine.org/">Redmine</a> &copy; 2006-2010 Jean-Philippe Lang-->
+</div>
+</div>
+
+</body>
+</html>
