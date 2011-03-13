@@ -5,8 +5,9 @@ import Config
 import Data.Maybe (fromJust)
 import Data.Either
 import qualified Data.Map as Map
+import Control.Monad.Trans (liftIO)
 
-import Network.Curl (curlPost)
+import Network.Curl
 import Network.Curl.Opts
 import Network.URI (URI, parseURI)
 
@@ -39,9 +40,13 @@ loadConfig m = fromJust $ do
 main = do
     dir <- getHomeDirectory
     conf <- readConf $ dir ++ "/.red"
-    login $ either (error . show) loadConfig conf
+    curl <- initialize
+    setopts curl [CurlCookieFile "cookies"]
+    login curl $ either (error . show) loadConfig conf
 
-parse = readDocument [ 
+parse = readDocument parseOptions
+
+parseOptions = [ 
         withParseHTML yes, 
         withWarnings no, 
         withTagSoup 
@@ -77,11 +82,27 @@ filterIssueField field = hasAttrValue "id" (== "issue_" ++ field)
 getIssueField field = deep (filterIssueField field  >>> getAttrValue "value")
 getIssueFieldD field = deep (filterIssueField field  >>> getChildren >>> getText)
 
-login :: Config -> IO ()
-login config = curlPost 
-    (appendURL config "login")
-    [ set "username" username, set "password" password ]
-        where set field cfield = field ++ "=" ++ (cfield config)
+login curl config = do
+    r <- do_curl_ curl loginPageURL [] :: IO CurlResponse
+    token <- getAuthToken (respBody r)
+    r <- do_curl_ curl loginPageURL (method_POST ++ [CurlPostFields [ 
+        set "username" username, 
+        set "password" password, 
+        "authenticity_token=" ++ (head token)
+        ]]) :: IO CurlResponse
+    if (respStatus r) == 302 
+        then return [""]
+        else getLoginError $ respBody r
+    where  
+            set field cfield = field ++ "=" ++ (cfield config)
+            loginPageURL = (appendURL config "login")
+            getAuthToken page = runX $ readString parseOptions page >>>
+                deep (hasAttrValue "name" (== "authenticity_token") >>> getAttrValue "value")
+            getLoginError page = runX $ readString parseOptions page >>>
+                deep (
+                    hasAttrValue "class" (== "flash error")
+                    >>> getChildren >>> getText
+                )
 
 appendURL config path = (show $ url config) ++ "/" ++ path ++ "/"
 
