@@ -94,15 +94,15 @@ login curl config = do
         then return [""]
         else getLoginError $ respBody r
     where  
-            set field cfield = field ++ "=" ++ (cfield config)
-            loginPageURL = (appendURL config "login")
-            getAuthToken page = runX $ readString parseOptions page >>>
-                deep (hasAttrValue "name" (== "authenticity_token") >>> getAttrValue "value")
-            getLoginError page = runX $ readString parseOptions page >>>
-                deep (
-                    hasAttrValue "class" (== "flash error")
-                    >>> getChildren >>> getText
-                )
+        set field cfield = field ++ "=" ++ (cfield config)
+        loginPageURL = (appendURL config "login")
+        getAuthToken page = runX $ readString parseOptions page >>>
+            deep (hasAttrValue "name" (== "authenticity_token") >>> getAttrValue "value")
+        getLoginError page = runX $ readString parseOptions page >>>
+            deep (
+                hasAttrValue "class" (== "flash error")
+                >>> getChildren >>> getText
+            )
 
 appendURL config path = (show $ url config) ++ "/" ++ path ++ "/"
 
