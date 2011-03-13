@@ -41,9 +41,11 @@ main = do
     dir <- getHomeDirectory
     conf <- readConf $ dir ++ "/.red"
     curl <- initialize
+    setopts curl [CurlFollowLocation True]
     setopts curl [CurlCookieFile "cookies"]
     let config = either (error . show) loadConfig conf
     login curl config
+    showIssue curl config "1921"
 
 parse = readDocument parseOptions
 
@@ -91,9 +93,8 @@ login curl config = do
         set "password" password, 
         "authenticity_token=" ++ (head token)
         ]]) :: IO CurlResponse
-    if (respStatus r) == 302 
-        then return [""]
-        else getLoginError $ respBody r
+    errorMsg <- getLoginError $ respBody r
+    if errorMsg == [] then return () else error (head errorMsg)
     where  
         set field cfield = field ++ "=" ++ (cfield config)
         loginPageURL = (appendURL config "login")
@@ -104,6 +105,12 @@ login curl config = do
                 hasAttrValue "class" (== "flash error")
                 >>> getChildren >>> getText
             )
+
+showIssue curl config issue = do
+    r <- do_curl_ curl showPageRL [] :: IO CurlResponse
+    runX $ readString parseOptions (respBody r) >>> parseIssue
+    where
+        showPageRL = appendURL config ("issues/" ++ issue)
 
 appendURL config path = (show $ url config) ++ "/" ++ path ++ "/"
 
