@@ -1,9 +1,16 @@
 {-# LANGUAGE Arrows, NoMonomorphismRestriction #-}
 
+import Config
+
 import Data.Maybe (fromJust)
-import Network.Curl (curlGet)
+import Data.Either
+import qualified Data.Map as Map
+
+import Network.Curl (curlPost)
 import Network.Curl.Opts
 import Network.URI (URI, parseURI)
+
+import System.Directory
 
 import Text.HTML.TagSoup (parseTags)
 import Text.XML.HXT.Core
@@ -16,14 +23,23 @@ data Config = Config {
     username :: String,
     password :: String,
     url :: URI
-}
+} deriving Show
 
-loadConfig :: Config
-loadConfig = Config {username = "", password = "", 
-    url = fromJust $ parseURI "TODO"
-}
+loadConfig m = fromJust $ do
+    username <- lookup "username"
+    password <- lookup "password"
+    url <- lookup "url"
+    Just Config {
+        username = username, 
+        password = password,
+        url = fromJust $ parseURI url
+    }
+    where lookup s = Map.lookup s m
 
-main = runX $ parse "test/issue1.html" >>> parseIssue
+main = do
+    dir <- getHomeDirectory
+    conf <- readConf $ dir ++ "/.red"
+    login $ either (error . show) loadConfig conf
 
 parse = readDocument [ 
         withParseHTML yes, 
@@ -62,9 +78,12 @@ getIssueField field = deep (filterIssueField field  >>> getAttrValue "value")
 getIssueFieldD field = deep (filterIssueField field  >>> getChildren >>> getText)
 
 login :: Config -> IO ()
-login config = curlGet (geturl config "login") []
+login config = curlPost 
+    (appendURL config "login")
+    [ set "username" username, set "password" password ]
+        where set field cfield = field ++ "=" ++ (cfield config)
 
-geturl config path = (show $ url config) ++ path ++ "/"
+appendURL config path = (show $ url config) ++ "/" ++ path ++ "/"
 
 -- Tests
 
