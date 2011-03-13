@@ -31,9 +31,9 @@ parse = readDocument [
     ]
 
 data Issue = Issue { subject :: String, description :: String, history :: [History] }
-    deriving Show
+    deriving (Show, Eq)
 
-data History = History { note :: String } deriving Show
+data History = History { note :: String } deriving (Show, Eq)
 
 parseIssue = proc x -> do
     subject <- getIssueField "subject" -< x
