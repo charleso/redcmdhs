@@ -1,0 +1,14 @@
+Name:                RedCmd
+Version:             0.1
+Author:              Charles O'Farrell
+Maintainer:          charleso@charleso.org
+Stability:           Experimental
+Category:            Web
+Build-type:          Simple
+Cabal-version:       >=1.2
+
+Executable red
+  Main-is:          RedCmd.hs
+  Build-depends:    base >= 4,
+                    HTTP == 4000.1.1
+
