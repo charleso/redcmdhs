@@ -42,7 +42,8 @@ main = do
     conf <- readConf $ dir ++ "/.red"
     curl <- initialize
     setopts curl [CurlCookieFile "cookies"]
-    login curl $ either (error . show) loadConfig conf
+    let config = either (error . show) loadConfig conf
+    login curl config
 
 parse = readDocument parseOptions
 
